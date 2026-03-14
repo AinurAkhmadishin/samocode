@@ -1,7 +1,10 @@
-import { chromium } from "playwright";
+﻿import { chromium } from "playwright";
 
 export async function generatePdfFromHtml(html: string) {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({
+    headless: true,
+    executablePath: chromium.executablePath(),
+  });
 
   try {
     const page = await browser.newPage();
