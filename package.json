@@ -27,6 +27,7 @@
     "date-fns": "latest",
     "lucide-react": "latest",
     "next": "latest",
+    "autoprefixer": "^10.4.27",
     "postcss": "^8.5.8",
     "playwright": "^1.58.2",
     "react": "latest",
@@ -43,7 +44,6 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "prisma": "^6.16.2",
-    "autoprefixer": "^10.4.27",
     "tsx": "latest",
     "typescript": "latest"
   }
