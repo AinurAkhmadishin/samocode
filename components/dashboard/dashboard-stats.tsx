@@ -1,28 +1,28 @@
-﻿import { BellDot, CircleDollarSign, FolderKanban, WalletCards } from "lucide-react";
+﻿import { CircleDollarSign, FolderKanban, UsersRound, WalletCards } from "lucide-react";
 import type { DashboardStats as DashboardStatsType } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 
 const items = [
   {
+    key: "clientsCount",
+    label: "Клиенты в базе",
+    icon: UsersRound,
+  },
+  {
     key: "activeDeals",
-    label: "Активные сделки",
+    label: "Сделки в работе",
     icon: FolderKanban,
   },
   {
-    key: "unpaidDeals",
-    label: "Ожидают оплаты",
+    key: "awaitingPayment",
+    label: "Ждут оплату",
     icon: WalletCards,
   },
   {
     key: "monthRevenue",
     label: "Оплачено за месяц",
     icon: CircleDollarSign,
-  },
-  {
-    key: "upcomingReminders",
-    label: "Напоминания",
-    icon: BellDot,
   },
 ] as const;
 

@@ -19,14 +19,14 @@ export function RecentDeals({ deals }: { deals: Array<Deal & { client: Client }>
     <Card>
       <CardHeader>
         <CardTitle>Последние сделки</CardTitle>
-        <CardDescription>Пять последних обновлений по заказам и документам.</CardDescription>
+        <CardDescription>Откройте нужную сделку, чтобы проверить документы, оплату или следующий шаг.</CardDescription>
       </CardHeader>
       <CardContent>
         {deals.length === 0 ? (
           <EmptyState
             icon={ArrowUpRight}
             title="Пока нет сделок"
-            description="Создайте первую сделку, чтобы видеть здесь оплату, статусы и последние изменения."
+            description="Создайте первую сделку, чтобы видеть здесь статусы, сумму и быстрый переход к документам."
           />
         ) : (
           <div className="space-y-3">
@@ -50,7 +50,7 @@ export function RecentDeals({ deals }: { deals: Array<Deal & { client: Client }>
                   </div>
                   <div className="flex items-center gap-3 sm:text-right">
                     <div>
-                      <p className="text-sm text-muted-foreground">Сумма</p>
+                      <p className="text-sm text-muted-foreground">Сумма сделки</p>
                       <p className="font-semibold">{formatCurrency(deal.amount.toString())}</p>
                     </div>
                     <ArrowUpRight className="h-4 w-4 text-muted-foreground" />

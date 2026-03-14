@@ -7,17 +7,15 @@ import { Benefits } from "@/components/landing/benefits";
 import { Faq } from "@/components/landing/faq";
 import { FinalCta } from "@/components/landing/final-cta";
 import { Footer } from "@/components/landing/footer";
-import { ForWhom } from "@/components/landing/for-whom";
 import { FullDescription } from "@/components/landing/full-description";
 import { Header } from "@/components/landing/header";
 import { Hero } from "@/components/landing/hero";
 import { HowItWorks } from "@/components/landing/how-it-works";
-import { TrustBlock } from "@/components/landing/trust-block";
 
 export const metadata: Metadata = {
-  title: "SamoDoc - рабочий кабинет самозанятого исполнителя",
+  title: "SamoDoc - клиенты, сделки и документы в одном кабинете",
   description:
-    "Клиенты, сделки, договоры, акты, оплаты и напоминания в одном спокойном сервисе для самозанятых исполнителей и фрилансеров.",
+    "Клиенты, сделки и документы в одном кабинете: договор и акт без хаоса, первый понятный результат уже за 10 минут.",
 };
 
 export default async function HomePage() {
@@ -40,11 +38,9 @@ export default async function HomePage() {
       <Header />
       <Hero />
       <AboutService />
-      <FullDescription />
       <Benefits />
+      <FullDescription />
       <HowItWorks />
-      <ForWhom />
-      <TrustBlock />
       <Faq />
       <FinalCta />
       <Footer />

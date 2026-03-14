@@ -1,37 +1,37 @@
-﻿import { Gauge, LayoutPanelTop, ListChecks, Rocket, UserCircle2, Workflow } from "lucide-react";
+﻿import { FileStack, FolderKanban, MessageSquareText, NotebookText, ReceiptText, Sheet } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { SectionHeading } from "@/components/landing/section-heading";
 
-const benefits = [
+const replacements = [
   {
-    title: "Быстрый старт без сложной настройки",
-    description: "Обычная регистрация по логину и паролю помогает начать работу сразу, без внешних провайдеров и лишних шагов.",
-    icon: Rocket,
+    title: "Таблицы с клиентами и оплатами",
+    description: "Вместо отдельных строк, которые быстро теряют контекст сделки, документов и следующего шага.",
+    icon: Sheet,
   },
   {
-    title: "Понятный интерфейс без перегруженности",
-    description: "Только ключевые действия, которые нужны для ежедневной работы с клиентами и заказами.",
-    icon: LayoutPanelTop,
+    title: "Заметки и список задач",
+    description: "Когда важные договорённости, суммы и дедлайны живут в голове или в случайных заметках.",
+    icon: NotebookText,
   },
   {
-    title: "Один кабинет вместо заметок, таблиц и файлов",
-    description: "Клиенты, шаблоны, документы и напоминания больше не разбросаны по разным инструментам.",
-    icon: ListChecks,
+    title: "Папки с договорами и актами",
+    description: "Документы не нужно искать по файлам и версиям, потому что они привязаны к конкретной сделке.",
+    icon: FileStack,
   },
   {
-    title: "Быстрое оформление типовых сделок",
-    description: "Повторяющиеся услуги и документы можно собирать заметно быстрее и спокойнее.",
-    icon: Workflow,
+    title: "Переписки в мессенджерах",
+    description: "Клиент общается в чате, но структура сделки, оплата и документы остаются в вашем кабинете.",
+    icon: MessageSquareText,
   },
   {
-    title: "Удобно для работы в одиночку",
-    description: "Сервис подходит тем, кто сам ведёт общение, оформляет документы и контролирует оплату.",
-    icon: UserCircle2,
+    title: "Ручное создание договора",
+    description: "Один раз вбили данные по сделке и дальше используете их для документов, а не собираете заново.",
+    icon: ReceiptText,
   },
   {
-    title: "Напоминания по важным этапам сделки",
-    description: "Легче не пропускать оплату, согласование, отправку акта и другие ключевые точки.",
-    icon: Gauge,
+    title: "Разрозненные карточки заказов",
+    description: "Клиент, сумма, статус оплаты и документы остаются в одной логике, а не в нескольких сервисах.",
+    icon: FolderKanban,
   },
 ];
 
@@ -40,13 +40,13 @@ export function Benefits() {
     <section id="benefits" className="px-4 py-12 sm:px-6 lg:px-8 lg:py-20">
       <div className="mx-auto max-w-7xl">
         <SectionHeading
-          eyebrow="Преимущества"
-          title="Почему таким сервисом удобно пользоваться каждый день"
-          description="SamoDoc не пытается заменить всё сразу. Он закрывает именно те задачи, которые регулярно повторяются у самозанятого исполнителя и часто создают лишний шум."
+          eyebrow="Что заменяет сервис"
+          title="Что можно собрать в одном кабинете вместо россыпи отдельных инструментов"
+          description="SamoDoc сводит в одну рабочую систему то, что обычно разбросано по таблицам, заметкам, файлам и чатам."
         />
 
         <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {benefits.map(({ title, description, icon: Icon }) => (
+          {replacements.map(({ title, description, icon: Icon }) => (
             <Card key={title} className="border-white/70 bg-white/90 p-6">
               <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eff5f8] text-primary">
                 <Icon className="h-5 w-5" />

@@ -1,4 +1,4 @@
-import type { Client, Deal, Document, Profile, Reminder, ServiceTemplate } from "@prisma/client";
+﻿import type { Client, Deal, Document, Profile, Reminder, ServiceTemplate } from "@prisma/client";
 
 export type AppUser = {
   id: string;
@@ -9,10 +9,10 @@ export type AppUser = {
 };
 
 export type DashboardStats = {
+  clientsCount: number;
   activeDeals: number;
-  unpaidDeals: number;
+  awaitingPayment: number;
   monthRevenue: number;
-  upcomingReminders: number;
 };
 
 export type DealWithRelations = Deal & {
@@ -37,4 +37,3 @@ export type UserProfileBundle = {
     updatedAt: Date;
   } | null;
 };
-
