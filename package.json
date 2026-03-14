@@ -5,9 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:prod": "npx prisma generate && npx playwright install chromium && next build",
     "start": "next start",
     "start:prod": "npx prisma migrate deploy && next start --hostname 0.0.0.0 --port 3000",
     "db:deploy": "npx prisma migrate deploy",
+    "playwright:install": "npx playwright install chromium",
     "lint": "next lint",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
