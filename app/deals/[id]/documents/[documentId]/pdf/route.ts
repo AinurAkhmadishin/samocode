@@ -1,6 +1,5 @@
-import { NextResponse } from "next/server";
-import { generateDocumentHtml } from "@/server/documents/generate-document";
-import { generatePdfFromHtml } from "@/server/documents/pdf";
+﻿import { NextResponse } from "next/server";
+import { generateDocumentPdf } from "@/server/documents/pdf";
 import { getSessionUser } from "@/server/auth/get-session-user";
 import { prisma } from "@/lib/prisma";
 
@@ -44,7 +43,7 @@ export async function GET(_: Request, context: { params: Promise<{ id: string; d
     },
   });
 
-  const html = generateDocumentHtml({
+  const pdf = await generateDocumentPdf({
     deal: document.deal,
     profile: currentUser?.profile ?? null,
     businessDetails: currentUser?.businessDetails ?? null,
@@ -53,11 +52,9 @@ export async function GET(_: Request, context: { params: Promise<{ id: string; d
     generatedAt: document.generatedAt ?? document.createdAt,
   });
 
-  const pdf = await generatePdfFromHtml(html);
-  const body = new Uint8Array(pdf);
   const filename = `${documentTitles[document.type]}-${document.docNumber ?? document.id}.pdf`;
 
-  return new NextResponse(body, {
+  return new NextResponse(new Uint8Array(pdf), {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `attachment; filename*=UTF-8''${encodeURIComponent(filename)}`,
