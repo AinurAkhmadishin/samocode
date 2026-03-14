@@ -7,7 +7,7 @@
     "build": "next build",
     "build:prod": "npx prisma generate && cross-env PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install chromium && next build",
     "start": "next start",
-    "start:prod": "npx prisma migrate deploy && next start --hostname 0.0.0.0 --port 3000",
+    "start:prod": "cross-env PLAYWRIGHT_BROWSERS_PATH=0 npx prisma migrate deploy && cross-env PLAYWRIGHT_BROWSERS_PATH=0 next start --hostname 0.0.0.0 --port 3000",
     "db:deploy": "npx prisma migrate deploy",
     "playwright:install": "cross-env PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install chromium",
     "lint": "next lint",
