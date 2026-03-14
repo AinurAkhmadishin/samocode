@@ -1,0 +1,77 @@
+# SamoDoc
+
+MVP ���-���������� ��� ����������� ������������ � ������ �� Next.js, Prisma � PostgreSQL.
+
+## ������
+
+1. ���������� �����������:
+
+```bash
+npm install
+```
+
+2. ���������� ���������� ���������:
+
+```bash
+copy .env.example .env
+```
+
+3. ��������� PostgreSQL � ������� `DATABASE_URL`.
+
+4. ������������ Prisma Client � ��������� ��������:
+
+```bash
+npm run prisma:generate
+npm run prisma:migrate
+```
+
+5. ��������� seed ��� ��������� dev-�����:
+
+```bash
+npm run prisma:seed
+```
+
+6. ��������� ����������:
+
+```bash
+npm run dev
+```
+
+## ENV
+
+- `DATABASE_URL`
+- `AUTH_SECRET` - ������ ��� ������� session cookie
+
+## �����������
+
+- � ������� ������������ ������������ ����������� �� `login` � `password`
+- ����������� �������� �� `/register`
+- ���� �������� �� `/login`
+- ����� ��������� ����� �������� session cookie
+- ��������� ������� �������������� ����������������� ������������ �� `/login`
+
+## Dev/Test account
+
+����� `npm run prisma:seed` �������� �������� ������� ������ ������ ��� ��������� ���������� � dev/test ���������:
+
+- `login: admin`
+- `password: admin`
+
+## ��� ���� � MVP
+
+- ������������ ����������� � ���� �� ������ � ������
+- ��������� � ������������� ������ �������
+- ������� � ������� �����
+- ������ �� ��������� ������
+- ��������� ��������, ���� � �����
+- ����������� �� �������
+- ��������� ������� � ����������
+
+## ���������
+
+- `app/` �������� � route handlers
+- `components/` �����, layout � UI
+- `lib/` Prisma, auth, validations, helpers
+- `prisma/` ����� � seed
+- `server/` server actions � ��������� ����������
+- `types/` ����� ����

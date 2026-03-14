@@ -1,0 +1,50 @@
+{
+  "name": "samo-doc",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "tsx prisma/seed.ts"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "latest",
+    "@prisma/client": "^6.16.2",
+    "@radix-ui/react-dialog": "latest",
+    "@radix-ui/react-label": "latest",
+    "@radix-ui/react-slot": "latest",
+    "@radix-ui/react-toast": "latest",
+    "bcrypt": "^6.0.0",
+    "class-variance-authority": "latest",
+    "clsx": "latest",
+    "date-fns": "latest",
+    "lucide-react": "latest",
+    "next": "latest",
+    "playwright": "^1.58.2",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-hook-form": "latest",
+    "sonner": "latest",
+    "tailwind-merge": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
+    "prisma": "^6.16.2",
+    "tailwindcss": "^3.4.17",
+    "tsx": "latest",
+    "typescript": "latest"
+  }
+}

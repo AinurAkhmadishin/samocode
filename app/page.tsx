@@ -1,0 +1,53 @@
+﻿import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/current-user";
+import { isProfileComplete } from "@/lib/auth";
+import { AboutService } from "@/components/landing/about-service";
+import { Benefits } from "@/components/landing/benefits";
+import { Faq } from "@/components/landing/faq";
+import { FinalCta } from "@/components/landing/final-cta";
+import { Footer } from "@/components/landing/footer";
+import { ForWhom } from "@/components/landing/for-whom";
+import { FullDescription } from "@/components/landing/full-description";
+import { Header } from "@/components/landing/header";
+import { Hero } from "@/components/landing/hero";
+import { HowItWorks } from "@/components/landing/how-it-works";
+import { TrustBlock } from "@/components/landing/trust-block";
+
+export const metadata: Metadata = {
+  title: "SamoDoc - рабочий кабинет самозанятого исполнителя",
+  description:
+    "Клиенты, сделки, договоры, акты, оплаты и напоминания в одном спокойном сервисе для самозанятых исполнителей и фрилансеров.",
+};
+
+export default async function HomePage() {
+  const user = await getCurrentUser();
+
+  if (user && isProfileComplete(user)) {
+    redirect("/dashboard");
+  }
+
+  if (user) {
+    redirect("/onboarding");
+  }
+
+  return (
+    <main className="relative overflow-hidden">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[720px] bg-[radial-gradient(circle_at_top_left,rgba(213,170,118,0.22),transparent_28%),radial-gradient(circle_at_80%_20%,rgba(32,83,116,0.14),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.92),rgba(249,246,240,0.65))]"
+      />
+      <Header />
+      <Hero />
+      <AboutService />
+      <FullDescription />
+      <Benefits />
+      <HowItWorks />
+      <ForWhom />
+      <TrustBlock />
+      <Faq />
+      <FinalCta />
+      <Footer />
+    </main>
+  );
+}
