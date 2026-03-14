@@ -4,15 +4,15 @@ import type { BusinessDetails, Client, Deal, DocumentType, Profile, ServiceTempl
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 const PdfPrinter = require("pdfmake/js/Printer").default as new (fontDescriptors: Record<string, unknown>) => {
-  createPdfKitDocument: (docDefinition: unknown, options?: unknown) => Promise<NodeJS.ReadWriteStream>;
+  createPdfKitDocument: (docDefinition: unknown, options?: unknown) => NodeJS.ReadWriteStream;
 };
 
 const printer = new PdfPrinter({
   Roboto: {
-    normal: path.join(process.cwd(), "node_modules", "pdfmake", "fonts", "Roboto", "Roboto-Regular.ttf"),
-    bold: path.join(process.cwd(), "node_modules", "pdfmake", "fonts", "Roboto", "Roboto-Medium.ttf"),
-    italics: path.join(process.cwd(), "node_modules", "pdfmake", "fonts", "Roboto", "Roboto-Italic.ttf"),
-    bolditalics: path.join(process.cwd(), "node_modules", "pdfmake", "fonts", "Roboto", "Roboto-MediumItalic.ttf"),
+    normal: path.join(process.cwd(), "server", "documents", "fonts", "Roboto", "Roboto-Regular.ttf"),
+    bold: path.join(process.cwd(), "server", "documents", "fonts", "Roboto", "Roboto-Medium.ttf"),
+    italics: path.join(process.cwd(), "server", "documents", "fonts", "Roboto", "Roboto-Italic.ttf"),
+    bolditalics: path.join(process.cwd(), "server", "documents", "fonts", "Roboto", "Roboto-MediumItalic.ttf"),
   },
 });
 
@@ -171,7 +171,7 @@ function buildDefinition({ deal, profile, businessDetails, type, docNumber, gene
 
 export async function generateDocumentPdf(bundle: Bundle) {
   const docDefinition = buildDefinition(bundle);
-  const doc = await printer.createPdfKitDocument(docDefinition);
+  const doc = printer.createPdfKitDocument(docDefinition);
 
   return await new Promise<Buffer>((resolve, reject) => {
     const chunks: Buffer[] = [];
