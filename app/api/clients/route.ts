@@ -25,14 +25,17 @@ export async function POST(request: Request) {
     );
   }
 
+  const isCompany = parsed.data.type === "company";
+  const normalizedName = parsed.data.name.trim();
+
   const payload = {
     type: parsed.data.type,
-    name: parsed.data.name,
+    name: normalizedName,
     contactName: normalizeOptional(parsed.data.contactName),
     phone: normalizeOptional(parsed.data.phone),
     email: normalizeOptional(parsed.data.email),
-    companyName: normalizeOptional(parsed.data.companyName),
-    inn: normalizeOptional(parsed.data.inn),
+    companyName: isCompany ? normalizeOptional(normalizedName) : null,
+    inn: isCompany ? normalizeOptional(parsed.data.inn) : null,
     notes: normalizeOptional(parsed.data.notes),
   };
 

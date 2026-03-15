@@ -1,10 +1,10 @@
 ﻿"use client";
 
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ClientType } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { clientSchema, type ClientInput } from "@/lib/validations/client";
 import { Button } from "@/components/ui/button";
@@ -37,11 +37,26 @@ export function ClientForm({ initialValues, onReset }: { initialValues?: ClientI
   });
 
   const isEditing = Boolean(initialValues?.id);
+  const clientType = useWatch({ control: form.control, name: "type" }) ?? ClientType.person;
+  const isCompany = clientType === ClientType.company;
+
+  useEffect(() => {
+    if (!isCompany) {
+      form.clearErrors(["companyName", "inn"]);
+    }
+  }, [form, isCompany]);
 
   const onSubmit = form.handleSubmit(
     (values) => {
+      const payload: ClientInput = {
+        ...values,
+        id: values.id || undefined,
+        name: values.name.trim(),
+        companyName: values.type === ClientType.company ? values.name.trim() : "",
+        inn: values.type === ClientType.company ? values.inn ?? "" : "",
+      };
+
       startTransition(async () => {
-        const payload = isEditing ? values : { ...values, id: undefined };
         const response = await fetch("/api/clients", {
           method: "POST",
           headers: {
@@ -73,13 +88,12 @@ export function ClientForm({ initialValues, onReset }: { initialValues?: ClientI
     <Card>
       <CardHeader>
         <CardTitle>{isEditing ? "Редактирование клиента" : "Новый клиент"}</CardTitle>
-        <CardDescription>
-          Сохраните контактные данные клиента, чтобы использовать их в сделках и документах.
-        </CardDescription>
+        <CardDescription>Сохраните клиента, чтобы использовать его в сделках и документах.</CardDescription>
       </CardHeader>
       <CardContent>
         <form className="space-y-5" onSubmit={onSubmit} noValidate>
           {isEditing ? <input type="hidden" {...form.register("id")} /> : null}
+
           <FormField label="Тип клиента" error={form.formState.errors.type?.message}>
             <select
               className={cn(
@@ -93,22 +107,28 @@ export function ClientForm({ initialValues, onReset }: { initialValues?: ClientI
               <option value={ClientType.company}>Компания</option>
             </select>
           </FormField>
-          <FormField label="Имя клиента" error={form.formState.errors.name?.message}>
+
+          <FormField
+            label={isCompany ? "Название компании" : "Имя клиента"}
+            error={form.formState.errors.name?.message}
+          >
             <Input
-              placeholder="Например, Анна Смирнова"
+              placeholder={isCompany ? "Например, ООО Ромашка" : "Например, Анна Смирнова"}
               aria-invalid={Boolean(form.formState.errors.name)}
               className={cn(form.formState.errors.name && "border-destructive focus:ring-destructive")}
               {...form.register("name")}
             />
           </FormField>
+
           <FormField label="Контактное лицо" error={form.formState.errors.contactName?.message}>
             <Input
-              placeholder="Если общаетесь не с основным заказчиком"
+              placeholder={isCompany ? "Кто ведёт коммуникацию по заказу" : "Если общаетесь не с основным заказчиком"}
               aria-invalid={Boolean(form.formState.errors.contactName)}
               className={cn(form.formState.errors.contactName && "border-destructive focus:ring-destructive")}
               {...form.register("contactName")}
             />
           </FormField>
+
           <div className="grid gap-5 sm:grid-cols-2">
             <FormField label="Телефон" error={form.formState.errors.phone?.message}>
               <Input
@@ -127,35 +147,33 @@ export function ClientForm({ initialValues, onReset }: { initialValues?: ClientI
               />
             </FormField>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2">
-            <FormField label="Компания" error={form.formState.errors.companyName?.message}>
-              <Input
-                placeholder="ООО Ромашка"
-                aria-invalid={Boolean(form.formState.errors.companyName)}
-                className={cn(form.formState.errors.companyName && "border-destructive focus:ring-destructive")}
-                {...form.register("companyName")}
-              />
-            </FormField>
+
+          {isCompany ? (
             <FormField label="ИНН" error={form.formState.errors.inn?.message}>
               <Input
                 placeholder="10 или 12 цифр"
+                inputMode="numeric"
                 aria-invalid={Boolean(form.formState.errors.inn)}
                 className={cn(form.formState.errors.inn && "border-destructive focus:ring-destructive")}
                 {...form.register("inn")}
               />
             </FormField>
-          </div>
+          ) : null}
+
           <FormField label="Комментарий" error={form.formState.errors.notes?.message}>
             <Textarea
-              placeholder="Важные детали по клиенту или предпочтения по работе"
+              placeholder={isCompany
+                ? "Важные детали по клиенту или особенности по работе"
+                : "Важные детали по клиенту или предпочтения по работе"}
               aria-invalid={Boolean(form.formState.errors.notes)}
               className={cn(form.formState.errors.notes && "border-destructive focus:ring-destructive")}
               {...form.register("notes")}
             />
           </FormField>
-          <div className="flex gap-3">
-            <Button type="submit" disabled={isPending}>
-              {isPending ? "Сохраняем..." : isEditing ? "Сохранить" : "Создать клиента"}
+
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Button type="submit" disabled={isPending} className="px-6 sm:min-w-[180px]">
+              {isPending ? "Сохраняем..." : isEditing ? "Сохранить изменения" : "Создать клиента"}
             </Button>
             {isEditing ? (
               <Button

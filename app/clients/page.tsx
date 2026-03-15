@@ -18,7 +18,7 @@ export default async function ClientsPage() {
     <AppShell
       user={user}
       title="Клиенты"
-      description="Храните контакты заказчиков, быстро находите их и используйте в новых сделках."
+      description="Храните контакты клиентов, быстро находите их и используйте в новых сделках."
     >
       <ClientList clients={clients} />
     </AppShell>
