@@ -3,7 +3,6 @@ import type { Client, Deal } from "@prisma/client";
 import { ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { EmptyState } from "@/components/ui/empty-state";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 const statusMap: Record<string, { label: string; variant: "default" | "warning" | "success" | "danger" }> = {
@@ -19,15 +18,27 @@ export function RecentDeals({ deals }: { deals: Array<Deal & { client: Client }>
     <Card>
       <CardHeader>
         <CardTitle>Последние сделки</CardTitle>
-        <CardDescription>Откройте нужную сделку, чтобы проверить документы, оплату или следующий шаг.</CardDescription>
+        <CardDescription>Последние обновления по заказам и документам.</CardDescription>
       </CardHeader>
       <CardContent>
         {deals.length === 0 ? (
-          <EmptyState
-            icon={ArrowUpRight}
-            title="Пока нет сделок"
-            description="Создайте первую сделку, чтобы видеть здесь статусы, сумму и быстрый переход к документам."
-          />
+          <div className="rounded-[24px] border border-dashed bg-card/70 p-6 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-secondary">
+              <ArrowUpRight className="h-6 w-6 text-secondary-foreground" />
+            </div>
+            <h3 className="mt-4 text-lg font-semibold">Пока нет ни одной сделки</h3>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Создайте первую сделку, чтобы видеть здесь статусы, документы и последние обновления.
+            </p>
+            <div className="mt-5">
+              <Link
+                href="/deals/new"
+                className="inline-flex h-11 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:opacity-95"
+              >
+                Создать сделку
+              </Link>
+            </div>
+          </div>
         ) : (
           <div className="space-y-3">
             {deals.map((deal) => {
@@ -37,23 +48,32 @@ export function RecentDeals({ deals }: { deals: Array<Deal & { client: Client }>
                 <Link
                   key={deal.id}
                   href={`/deals/${deal.id}`}
-                  className="flex flex-col gap-3 rounded-[24px] border px-4 py-4 transition hover:border-primary/40 hover:bg-secondary/30 sm:flex-row sm:items-center sm:justify-between"
+                  className="group block cursor-pointer rounded-[24px] border px-4 py-4 transition duration-200 hover:border-primary/45 hover:bg-secondary/35 hover:shadow-sm"
                 >
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-semibold">{deal.title}</p>
-                      <Badge variant={status.variant}>{status.label}</Badge>
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="font-semibold">{deal.title}</p>
+                        <Badge variant={status.variant}>{status.label}</Badge>
+                      </div>
+                      <div className="mt-3">
+                        <p className="text-sm text-muted-foreground">Сумма</p>
+                        <p className="mt-1 font-semibold">{formatCurrency(deal.amount.toString())}</p>
+                      </div>
+                      <div className="mt-3 grid gap-2 text-sm text-muted-foreground">
+                        <p>
+                          <span className="text-foreground">Клиент:</span> {deal.client.name}
+                        </p>
+                        <p>
+                          <span className="text-foreground">Обновлено:</span> {formatDate(deal.updatedAt)}
+                        </p>
+                      </div>
                     </div>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {deal.client.name} · Обновлено {formatDate(deal.updatedAt)}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3 sm:text-right">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Сумма сделки</p>
-                      <p className="font-semibold">{formatCurrency(deal.amount.toString())}</p>
+                    <div className="flex items-center justify-end gap-3 sm:block sm:text-right">
+                      <div className="rounded-full border border-transparent p-1.5 text-muted-foreground transition group-hover:border-primary/15 group-hover:bg-background group-hover:text-foreground">
+                        <ArrowUpRight className="h-4 w-4" />
+                      </div>
                     </div>
-                    <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
                   </div>
                 </Link>
               );

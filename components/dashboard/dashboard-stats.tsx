@@ -6,17 +6,17 @@ import { Card } from "@/components/ui/card";
 const items = [
   {
     key: "clientsCount",
-    label: "Клиенты в базе",
+    label: "Клиенты",
     icon: UsersRound,
   },
   {
     key: "activeDeals",
-    label: "Сделки в работе",
+    label: "Активные сделки",
     icon: FolderKanban,
   },
   {
     key: "awaitingPayment",
-    label: "Ждут оплату",
+    label: "Ожидают оплаты",
     icon: WalletCards,
   },
   {
