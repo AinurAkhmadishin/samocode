@@ -18,7 +18,7 @@ export async function saveServiceTemplate(input: ServiceTemplateInput) {
   }
 
   const payload = {
-    title: parsed.data.title,
+    title: parsed.data.title.trim(),
     description: normalizeOptional(parsed.data.description),
     price: parsed.data.price.toFixed(2),
     prepaymentPercent: parsed.data.prepaymentPercent ?? null,

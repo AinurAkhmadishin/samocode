@@ -1,4 +1,4 @@
-import { AppShell } from "@/components/layout/app-shell";
+﻿import { AppShell } from "@/components/layout/app-shell";
 import { ServiceTemplateList } from "@/components/services/service-template-list";
 import { getSessionUser } from "@/server/auth/get-session-user";
 import { prisma } from "@/lib/prisma";
