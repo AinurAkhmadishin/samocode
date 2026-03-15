@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppShell } from "@/components/layout/app-shell";
 import { DealList } from "@/components/deals/deal-list";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,7 @@ export default async function DealsPage() {
     <AppShell
       user={user}
       title="Сделки"
-      description="Просматривайте активные сделки, статусы, документы и напоминания по каждому заказу."
+      description="Следите за активными сделками, статусами, документами и следующими шагами по каждому заказу."
       actions={
         <Button asChild>
           <Link href="/deals/new">Новая сделка</Link>

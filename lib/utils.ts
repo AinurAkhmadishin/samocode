@@ -22,10 +22,15 @@ export function formatCurrency(value: number | string) {
 
 export function formatDate(value: Date | string | null | undefined) {
   if (!value) {
-    return "пїЅ?пїЅ";
+    return "Не указана";
   }
 
   const date = value instanceof Date ? value : new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Не указана";
+  }
+
   return format(date, "d MMMM yyyy", { locale: ru });
 }
 
