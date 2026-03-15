@@ -12,21 +12,25 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/60 bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex shrink-0 items-center gap-3">
-          <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[#16384b] text-sm font-bold text-white shadow-sm">
+    <header className="sticky top-0 z-50 border-b border-white/70 bg-background/82 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
+        <Link href="/" className="flex shrink-0 items-center gap-3 rounded-2xl transition-transform hover:translate-y-[-1px]">
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[#16384b] text-sm font-bold text-white shadow-[0_10px_24px_rgba(22,56,75,0.18)]">
             S
           </span>
           <div>
-            <p className="text-base font-semibold text-slate-950">SamoDoc</p>
-            <p className="text-xs text-muted-foreground">Рабочий кабинет самозанятого</p>
+            <p className="text-[1.02rem] font-semibold tracking-[-0.01em] text-slate-950">SamoDoc</p>
+            <p className="text-xs text-slate-600">Рабочий кабинет самозанятого</p>
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="hidden items-center gap-2 lg:flex">
           {landingNavLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="text-sm text-slate-700 hover:text-slate-950">
+            <Link
+              key={link.href}
+              href={link.href}
+              className="rounded-full px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-white/70 hover:text-slate-950"
+            >
               {link.label}
             </Link>
           ))}
@@ -40,7 +44,7 @@ export function Header() {
           type="button"
           variant="outline"
           size="icon"
-          className="lg:hidden"
+          className="border-white/70 bg-white/80 lg:hidden"
           onClick={() => setIsOpen((value) => !value)}
           aria-expanded={isOpen}
           aria-label={isOpen ? "Закрыть меню" : "Открыть меню"}

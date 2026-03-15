@@ -15,7 +15,7 @@ import { HowItWorks } from "@/components/landing/how-it-works";
 export const metadata: Metadata = {
   title: "SamoDoc - клиенты, сделки и документы в одном кабинете",
   description:
-    "Клиенты, сделки и документы в одном кабинете: договор и акт без хаоса, первый понятный результат уже за 10 минут.",
+    "Добавьте клиента, оформите сделку и соберите базовые документы в одном кабинете. Первый результат уже за 10 минут.",
 };
 
 export default async function HomePage() {

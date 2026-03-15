@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -22,11 +22,11 @@ export function AuthButtons({
         className,
       )}
     >
-      <Button asChild variant="outline" className={cn(fullWidth && "w-full")}>
-        <Link href="/login">Войти</Link>
-      </Button>
-      <Button asChild className={cn(fullWidth && "w-full")}>
+      <Button asChild className={cn("shadow-sm", fullWidth && "w-full")}>
         <Link href="/register">Зарегистрироваться</Link>
+      </Button>
+      <Button asChild variant="outline" className={cn("border-slate-200 bg-white/80 text-slate-900 hover:bg-white", fullWidth && "w-full")}>
+        <Link href="/login">Войти</Link>
       </Button>
     </div>
   );
