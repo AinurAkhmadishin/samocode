@@ -1,8 +1,9 @@
-﻿import fs from "fs/promises";
+import fs from "fs/promises";
 import path from "path";
 import { PDFDocument, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
 import type { BusinessDetails, Client, Deal, DocumentType, Profile, ServiceTemplate } from "@prisma/client";
+import { buildContractRenderData } from "@/server/documents/contract-content";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 type Bundle = {
@@ -326,27 +327,14 @@ function drawTable(ctx: PdfContext, widths: number[], rows: TableRow[], gapAfter
   ctx.cursorY -= gapAfter;
 }
 
-function drawSignatureRow(ctx: PdfContext, left: string, right: string) {
-  drawColumns(
-    ctx,
-    [
-      { title: "Исполнитель", body: left },
-      { title: "Заказчик", body: right },
-    ],
-    0,
-  );
-}
-
 function buildPdf(ctx: PdfContext, { deal, profile, businessDetails, type, docNumber, generatedAt }: Bundle) {
-  const executorName = profile?.fullName ?? businessDetails?.signerName ?? "________________";
-  const executorInn = profile?.inn ?? "____________";
+  const executorName = profile?.fullName?.trim() || businessDetails?.signerName?.trim() || "Исполнитель";
+  const executorInn = profile?.inn?.trim() || "не указан";
   const clientName = deal.client.companyName || deal.client.name;
   const dealTitle = deal.title;
   const amount = formatCurrency(deal.amount.toString());
   const date = formatDate(generatedAt);
-  const city = profile?.city ?? "____________";
-  const description = deal.description ?? "Описание услуги не заполнено";
-  const prepayment = deal.prepaymentAmount ? formatCurrency(deal.prepaymentAmount.toString()) : null;
+  const description = deal.description?.trim() || "Описание услуги не заполнено";
 
   if (type === "invoice") {
     drawTextBlock(ctx, `Счет на оплату № ${docNumber}`, { size: 22, bold: true });
@@ -378,7 +366,7 @@ function buildPdf(ctx: PdfContext, { deal, profile, businessDetails, type, docNu
     drawTextBlock(ctx, `Итого к оплате: ${amount}`, { size: 16, bold: true, gapAfter: 8 });
     drawTextBlock(
       ctx,
-      "Оплата по данному счету подтверждает согласие заказчика с объемом и стоимостью работ. Реквизиты и способ оплаты стороны согласуют отдельно.",
+      "Оплата по данному счету подтверждает согласие Заказчика с объемом и стоимостью услуг. Способ оплаты и реквизиты стороны используют в согласованном рабочем порядке.",
     );
     return;
   }
@@ -388,7 +376,7 @@ function buildPdf(ctx: PdfContext, { deal, profile, businessDetails, type, docNu
     drawTextBlock(ctx, `от ${date}`, { size: 11, color: COLORS.muted, gapAfter: 12 });
     drawTextBlock(
       ctx,
-      `${executorName}, ИНН ${executorInn}, именуемый далее Исполнитель, и ${clientName}, именуемый далее Заказчик, подписали настоящий акт о нижеследующем.`,
+      `${executorName}, ИНН ${executorInn}, далее — "Исполнитель", и ${clientName}, далее — "Заказчик", подписали настоящий акт о нижеследующем.`,
       { gapAfter: 12 },
     );
     drawTable(
@@ -413,42 +401,55 @@ function buildPdf(ctx: PdfContext, { deal, profile, businessDetails, type, docNu
       "Услуги оказаны в полном объеме, стороны претензий по качеству и срокам исполнения не имеют.",
       { gapAfter: 28 },
     );
-    drawSignatureRow(ctx, executorName, clientName);
+    drawColumns(
+      ctx,
+      [
+        { title: "Исполнитель", body: `${executorName}\nПодпись: ____________________` },
+        { title: "Заказчик", body: `${clientName}\nПодпись: ____________________` },
+      ],
+      0,
+    );
     return;
   }
 
-  drawTextBlock(ctx, `Договор оказания услуг № ${docNumber}`, { size: 22, bold: true });
-  drawTextBlock(ctx, `г. ${city} от ${date}`, { size: 11, color: COLORS.muted, gapAfter: 12 });
-  drawTextBlock(
+  const contract = buildContractRenderData({ deal, profile, businessDetails, docNumber, generatedAt });
+
+  drawTextBlock(ctx, contract.title, { size: 22, bold: true });
+
+  if (contract.cityLine) {
+    drawTextBlock(ctx, contract.cityLine, { size: 11, color: COLORS.muted, gapAfter: 2 });
+  }
+
+  drawTextBlock(ctx, contract.dateLine, { size: 11, color: COLORS.muted, gapAfter: 12 });
+  drawTextBlock(ctx, contract.preamble, { gapAfter: 16 });
+
+  for (const section of contract.sections) {
+    drawTextBlock(ctx, section.title, { size: 14, bold: true, gapAfter: 8 });
+
+    for (const text of section.paragraphs) {
+      drawTextBlock(ctx, text, { gapAfter: 4 });
+    }
+
+    ctx.cursorY -= 6;
+  }
+
+  drawTextBlock(ctx, "10. Реквизиты и подписи сторон", { size: 14, bold: true, gapAfter: 10 });
+  drawColumns(
     ctx,
-    `${executorName}, ИНН ${executorInn}, именуемый далее Исполнитель, с одной стороны, и ${clientName}, именуемый далее Заказчик, с другой стороны, заключили настоящий договор.`,
-    { gapAfter: 16 },
+    [
+      { title: "Исполнитель", body: contract.executorRequisites.join("\n") },
+      { title: "Заказчик", body: contract.clientRequisites.join("\n") },
+    ],
+    22,
   );
-  drawTextBlock(ctx, "1. Предмет договора", { size: 14, bold: true, gapAfter: 8 });
-  drawTextBlock(
+  drawColumns(
     ctx,
-    `Исполнитель обязуется оказать услугу «${dealTitle}», а Заказчик обязуется принять результат работ и оплатить их в согласованном размере.`,
-    { gapAfter: 12 },
+    [
+      { title: "Исполнитель", body: `${contract.executorSignature}\nПодпись: ____________________` },
+      { title: "Заказчик", body: `${contract.clientSignature}\nПодпись: ____________________` },
+    ],
+    0,
   );
-  drawTextBlock(ctx, "2. Стоимость и порядок оплаты", { size: 14, bold: true, gapAfter: 8 });
-  drawTextBlock(
-    ctx,
-    `Стоимость услуг составляет ${amount}. ${prepayment ? `Предоплата: ${prepayment}.` : "Предоплата по договору не предусмотрена."}`,
-    { gapAfter: 12 },
-  );
-  drawTextBlock(ctx, "3. Сроки", { size: 14, bold: true, gapAfter: 8 });
-  drawTextBlock(
-    ctx,
-    `${deal.startDate ? `Дата начала работ: ${formatDate(deal.startDate)}.` : "Дата начала работ определяется дополнительно."} ${deal.dueDate ? `Срок выполнения: до ${formatDate(deal.dueDate)}.` : "Срок выполнения стороны согласуют отдельно."}`,
-    { gapAfter: 12 },
-  );
-  drawTextBlock(ctx, "4. Порядок сдачи и приемки", { size: 14, bold: true, gapAfter: 8 });
-  drawTextBlock(
-    ctx,
-    "Результат услуг передается Заказчику в согласованной форме. Подтверждением оказания услуг является подписанный акт или иное согласованное сторонами подтверждение.",
-    { gapAfter: 28 },
-  );
-  drawSignatureRow(ctx, executorName, clientName);
 }
 
 export async function generateDocumentPdf(bundle: Bundle) {
@@ -460,3 +461,4 @@ export async function generateDocumentPdf(bundle: Bundle) {
 
   return Buffer.from(await doc.save());
 }
+
